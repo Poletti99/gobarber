@@ -49,6 +49,17 @@ class AppointmentController {
     const { provider_id, date } = req.body;
 
     /**
+     * Check if provider_id is equal user_id
+     */
+    const isTheSameId = provider_id === req.userId;
+
+    if (isTheSameId) {
+      return res
+        .status(401)
+        .json({ error: 'You can not create appointments for yourself' });
+    }
+
+    /**
      * Check if provider_id is a provider
      */
 
@@ -93,7 +104,7 @@ class AppointmentController {
     }
 
     const appointment = await Appointment.create({
-      user_id: req.user_id,
+      user_id: req.userId,
       provider_id,
       date,
     });
